@@ -1,4 +1,3 @@
-// index.js
 import express from "express";
 import { PORT } from './src/settings/environments.js';
 import { userRoutes } from "./src/routes/user.routes.js";
