@@ -1,4 +1,9 @@
 import { conn } from "../databases/connection.js";
+export const allUsersCtrl = (req, res)=>{
+    res.send("All users");
+};
+//Esta parte del código sirve para la conexión a la base de datos una vez se haya creado
+/*
 export const allUsersCtrl = async (req, res)=>{
     try {
         const [resultados] = await conn.query("SELECT * FROM users");
@@ -10,5 +15,5 @@ export const allUsersCtrl = async (req, res)=>{
         });
     }
 };
-
+*/
 

@@ -6,6 +6,7 @@ import {
     DB_HOST, 
     DB_PORT 
 } from "../settings/environments.js";
+//Se crea una función para pool
 const createMyPool = ()=> {
     try {
         const pool = createPool({
