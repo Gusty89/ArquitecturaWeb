@@ -1,36 +1,21 @@
-import express from "express";
-import { PORT } from './src/settings/environments.js';
-import { userRoutes } from "./src/routes/user.routes.js";
-import "./src/databases/connection.js";
-//import cors from "cors";
-//import bcrypt from "bcrypt";
-//import cookieParser from "cookie-parser"; 
-//import jsonwebtoken from "jsonwebtoken";
-import morgan from "morgan";
+import 'dotenv/config'
+import express from 'express'
+import userRouter from './src/routes/user.routes.js'
+import publicRouter from './src/routes/public.routes.js'
 
 const app = express();
-//const bcrypt = require('bcrypt');
-//const cookieParser = require('cookie-parser');
-//const jsonwebtoken = require('jsonwebtoken');
-//const morgan = require('morgan');
+const PORT = process.env.PORT || 3000
 
 // Middleware para servir archivos estáticos (ej. imágenes, CSS, JS)
-//app.use(cors()); //sirve para que un cliente que haga una petición de un host que no esté en el mismo puerto del servidor pueda acceder igual
-//app.use(bcrypt());//sirve para hashear contraseñas
-//app.use(cookieParser());//sirve para extraer y acceder a las cookies que el cliente envía al servidor
-//app.use(jsonwebtoken());//
-app.use(express.json());
-app.use(express.urlencoded({extended : false}));
-app.use(morgan("dev"));//sirve para mostrar un código de respuesta cuando se hace una petición al servidor
-// Ruta principal (home)
-app.get('/', (req, res) => {
-  res.send('¡Hola, mundo! Esta es mi primera aplicación en Node.js con Express');
-});
 
+app.use(express.json());
+app.use(express.urlencoded({extended : true}))
+app.use(express.static('pruebasFront'))
 //Creación de rutas
-app.use('/users',userRoutes);
+app.use('/', publicRouter)
+app.use('/users', userRouter)
 
 // Creación del servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto: ${PORT}`);
-});
+  console.log(`Servidor corriendo en el puerto ${PORT}`)
+})
