@@ -1,8 +1,13 @@
-import {Router} from "express";
-import { allUsersCtrl } from "../controllers/user.controllers.js";
+import {Router} from 'express'
+import { userController } from '../controllers/user.controllers.js'
+import { verifyToken } from '../middlewares/jwt.middleware.js'
 
-const userRoutes = Router();
 
-userRoutes.get("/", allUsersCtrl);
+const router = Router()
 
-export {userRoutes};
+router.post('/register', userController.register)
+router.post('/login', userController.login)
+//Ruta protegida
+router.get('/profile', verifyToken, userController.profile)
+
+export default router
