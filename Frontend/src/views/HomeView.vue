@@ -1,167 +1,103 @@
-<script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
-  <div>
-    <h1>Registro de Empleados</h1>
-    <form @submit.prevent="register">
-      <label for="dni">DNI/Número de Empleado:</label>
-      <input v-model="dni" type="text" id="dni" required />
-      <button type="submit">Registrar</button>
-    </form>
-    <p v-if="message">{{ message }}</p>
-    
-    <!-- Botón para abrir/cerrar el desplegable -->
-    <button @click="toggleRecords">
-      {{ showRecords ? 'Ocultar Registros' : 'Ver Registros' }}
-    </button>
+  <div class="login-container">
+    <h1>Iniciar Sesión</h1>
+    <form @submit.prevent="login">
+      <label for="username">Usuario:</label>
+      <input v-model="username" type="text" id="username" required />
 
-    <!-- Desplegable del historial de registros -->
-    <div v-if="showRecords">
-      <table class="records-table">
-        <thead>
-          <tr>
-            <th>DNI</th>
-            <th>Tipo</th>
-            <th>Hora</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(record, index) in records" :key="index" :class="{ 'odd-row': index % 2 === 0, 'even-row': index % 2 !== 0 }">
-            <td>{{ record.dni }}</td>
-            <td>{{ record.type }}</td>
-            <td>{{ record.time }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <label for="password">Contraseña:</label>
+      <input v-model="password" type="password" id="password" required />
+
+      <button type="submit">Ingresar</button>
+    </form>
+    <p v-if="message" class="message">{{ message }}</p>
   </div>
 </template>
 
-
 <script>
-import EmployeeList from '../components/EmployeeList.vue';
-
 export default {
-  components: {
-    EmployeeList,
-  },
   data() {
     return {
-      dni: '',
-      employees: [
-        { dni: '12345678', name: 'Juan Pérez' },
-        { dni: '87654321', name: 'María López' },
-        { dni: '23456789', name: 'Carlos García' },
-        { dni: '34567890', name: 'Ana Martínez' },
-        { dni: '45678901', name: 'Luis Fernández' },
-      ],
-      records: [],
+      username: '',
+      password: '',
       message: '',
-      showRecords: false, 
+      // Registro de empleados con usuario y contraseña
+      users: [
+        { dni: '12345678', username: 'juan', password: 'juan123', name: 'Juan Pérez' },
+        { dni: '87654321', username: 'maria', password: 'maria123', name: 'María López' },
+        { dni: '23456789', username: 'carlos', password: 'carlos123', name: 'Carlos García' },
+        { dni: '34567890', username: 'ana', password: 'ana123', name: 'Ana Martínez' },
+        { dni: '45678901', username: 'luis', password: 'luis123', name: 'Luis Fernández' },
+      ],
     };
   },
   methods: {
-    register() {
-      const employee = this.employees.find(emp => emp.dni === this.dni);
-      if (employee) {
-        const type = this.records.some(record => record.dni === this.dni && record.type === 'Entrada') ? 'Salida' : 'Entrada';
-        const newRecord = {
-          dni: this.dni,
-          type,
-          time: new Date().toLocaleString(),
-        };
-        this.records.push(newRecord);
-        this.message = `${type} registrado para ${employee.name}.`;
+    login() {
+      const user = this.users.find(
+        (user) => user.username === this.username && user.password === this.password
+      );
+      if (user) {
+        this.message = `Bienvenido, ${user.name}!`;
+        this.$router.push({ name: 'about' });
       } else {
-        this.message = 'El empleado no ha sido encontrado.';
+        this.message = 'Usuario o contraseña incorrectos.';
       }
-      this.dni = '';
-    },
-    toggleRecords() {
-      this.showRecords = !this.showRecords; // Alterna la visibilidad del historial
     },
   },
 };
 </script>
 
-
 <style scoped>
-  h1 {
-    color: #2e7d32; /* Verde oscuro */
-    text-align: center;
-  }
+.login-container {
+  background-color: #a5d6a7; /* Verde claro */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 40px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  form {
-    background-color: #a5d6a7; /* Verde claro */
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+h1 {
+  color: #2e7d32; /* Verde oscuro */
+  text-align: center;
+}
 
-  label {
-    color: #388e3c;
-    font-weight: bold;
-  }
+label {
+  display: block;
+  margin-top: 10px;
+  color: #388e3c;
+  font-weight: bold;
+}
 
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #66bb6a; 
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #66bb6a; 
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
 
-  button {
-    background-color: #388e3c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
+button {
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
 
-  button:hover {
-    background-color: #2e7d32;
-  }
+button:hover {
+  background-color: #2e7d32;
+}
 
-  p {
-    color: #1b5e20;
-    text-align: center;
-    font-size: 1.2em;
-    margin-top: 20px;
-  }
-
-  /* Estilos de la tabla */
-  table.records-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-
-  table.records-table th, table.records-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  table.records-table th {
-    background-color: #388e3c;
-    color: white;
-  }
-
-  /* Colores alternados para las filas */
-  .odd-row {
-    background-color: white;
-  }
-
-  .even-row {
-    background-color: #e8f5e9; /* Verde claro */
-  }
+.message {
+  color: #1b5e20;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.1em;
+}
 </style>
 
