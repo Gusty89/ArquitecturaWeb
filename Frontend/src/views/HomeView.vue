@@ -38,9 +38,11 @@ export default {
       );
       if (user) {
         this.message = `Bienvenido, ${user.name}!`;
-        this.$router.push({ name: 'about' });
+        this.$emit('login-status', true); // Emitir evento para actualizar el estado de login
+        this.$router.push({ name: 'about' }); // Redirige a About
       } else {
         this.message = 'Usuario o contraseña incorrectos.';
+        this.$emit('login-status', false); 
       }
     },
   },

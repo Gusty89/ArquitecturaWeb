@@ -1,5 +1,14 @@
 <script setup>
 import TheWelcome from '../components/TheWelcome.vue'
+import { useRouter } from 'vue-router' // Importar el enrutador
+
+const router = useRouter() // Inicializar el enrutador
+const emit = defineEmits();
+// Método para redirigir a la pantalla de inicio
+function goHome() {
+  emit('login-status', false);
+  router.push('/'); // Redirigir a la ruta de inicio
+}
 </script>
 
 <template>
@@ -36,17 +45,14 @@ import TheWelcome from '../components/TheWelcome.vue'
         </tbody>
       </table>
     </div>
+    
+    <!-- Botón para salir y volver a la pantalla de inicio -->
+    <button class="right-align-button" @click="goHome">Salir</button>
   </div>
 </template>
 
-
 <script>
-import EmployeeList from '../components/EmployeeList.vue';
-
 export default {
-  components: {
-    EmployeeList,
-  },
   data() {
     return {
       dni: '',
@@ -85,7 +91,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
   h1 {
@@ -134,6 +139,12 @@ export default {
     color: #1b5e20;
     text-align: center;
     font-size: 1.2em;
+    margin-top: 20px;
+  }
+
+  /* Botón alineado a la derecha */
+  .right-align-button {
+    float: right; /* Alinear a la derecha */
     margin-top: 20px;
   }
 

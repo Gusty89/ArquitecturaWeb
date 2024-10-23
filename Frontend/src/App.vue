@@ -1,6 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue';
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+
+// Definir el estado de autenticación usando ref
+const isLoggedIn = ref(false);
+
+// Método para actualizar el estado de autenticación
+function setLoginStatus(status) {
+  isLoggedIn.value = status;
+}
 </script>
 
 <template>
@@ -11,14 +20,21 @@ import HelloWorld from './components/HelloWorld.vue'
       <HelloWorld msg="Bienvenido al sistema RegEm" />
 
       <nav>
-        <RouterLink to="/">Login</RouterLink>
-        <RouterLink to="/about">Registros entrada/salida</RouterLink>
+        <RouterLink v-if="!isLoggedIn" to="/">Login</RouterLink>
+        <!-- Mostrar el enlace solo si el usuario está autenticado -->
+        <RouterLink v-if="isLoggedIn" to="/about">Registros entrada/salida</RouterLink>
       </nav>
     </div>
+      
+    
+    
   </header>
-
-  <RouterView />
+  <div>
+        <!-- Pasar el evento login-status al router-view para manejar el login -->
+      <RouterView @login-status="setLoginStatus" />
+  </div>
 </template>
+
 
 <style scoped>
 header {
