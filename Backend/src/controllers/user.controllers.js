@@ -7,24 +7,24 @@ import { userModel } from '../models/user.model.js'
 const register = async(req,res)=>{
     try {
 
-        const{username, email, password} = req.body
+        const{dni,username,password,name} = req.body
 
         //Validación para comprobar si se han ingresado todos los campos requeridos
 
-        if(!username || !email || !password){
+        if(!dni || !username || !password || !name){
             return res.status(400).json({
                 ok: false,
-                mensaje: "Falta ingresar algún campo: email, username, password"
+                mensaje: "Falta ingresar algún campo: dni, username, password, name"
             })
         }
 
         //Verificar que el mail creado no se encuentre en la base de datos
 
-        const user = await userModel.findOneByEmail(email)
+        const user = await userModel.findForUsername(username)
         if(user){
             return res.status(409).json({
                 ok: false,
-                mensaje: "Ya existe el email"
+                mensaje: "Ya existe el usuario"
             })
         }
 
@@ -36,11 +36,11 @@ const register = async(req,res)=>{
         const hashPassword = await bcryptjs.hash(password,salt)
 
         //Creación de un nuevo usuario y se pasa el hash por parámetro
-        const newUser = await userModel.create({email, password: hashPassword, username})
+        const newUser = await userModel.create({dni, username,password: hashPassword,name})
 
-        //Aplicar el token al email
+        //Aplicar el token al password
         const token = jwt.sign ({
-            email: newUser.email
+            password: newUser.password
         },
             process.env.JWT_SECRET,
             {
@@ -61,17 +61,17 @@ const register = async(req,res)=>{
 // /users/login
 const login = async(req,res)=>{
     try {
-        const{email, password} = req.body
+        const{username, password} = req.body
 
         //Validación para comprobar si se han ingresado todos los campos requeridos
 
-        if(!email || !password){
+        if(!username || !password){
             return res.status(400).json({
                 ok: false,
-                mensaje: "Falta ingresar algún campo: email, password"
+                mensaje: "Falta ingresar algún campo: username, password"
             });
         }
-        const user = await userModel.findOneByEmail(email)
+        const user = await userModel.findForUsername(username)
         if(!user){
             return res.status(404).json({error: "Usuario no encontrado"});
         }
@@ -81,7 +81,7 @@ const login = async(req,res)=>{
         if(!isMatch){
             return res.status(401).json({error: "Credenciales invalidas"});
         }
-        const token = jwt.sign ({email: user.email},
+        const token = jwt.sign ({username: user.username},
             process.env.JWT_SECRET,
             {
                 expiresIn: "1h"
@@ -103,7 +103,7 @@ const login = async(req,res)=>{
 //Realizar una ruta protegida para la información del usuario
 const profile = async(req,res)=>{
     try {
-        const user = await userModel.findOneByEmail(req.email)
+        const user = await userModel.findForUsername(req.username)
         res.status(200).json({ok: "Acceso permitido", msg: user})
     } catch (error) {
         console.log(error);

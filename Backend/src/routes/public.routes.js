@@ -1,17 +1,24 @@
 import { Router } from "express";
-import path from "path"
-const router = Router()
+import path from "path";
+import { fileURLToPath } from "url";  // Convierte la URL de ESM a ruta de archivo
 
-//Creación de una ruta absoluta, para evitar poner la extensión .html, solo funciona en la versión de node 22.9.0
-const __dirname = import.meta.dirname
+const router = Router();
 
-const publicPath = path.join(__dirname, '../pruebasFront')
-router.get('/login',(req, res)=>{
-    res.sendFile(publicPath + '/login.html')
-})
+// Convierte la URL actual a __filename
+const __filename = fileURLToPath(import.meta.url);
+// Obtiene el directorio de __filename
+const __dirname = path.dirname(__filename);
 
-router.get('/profile',(req, res)=>{
-    res.sendFile(publicPath + '/profile.html')
-})
+// Crea una ruta absoluta a tu carpeta 'pruebasFront'
+const publicPath = path.join(__dirname, '../pruebasFront');
 
-export default router
+// Define las rutas para los archivos HTML
+router.get('/login', (req, res) => {
+    res.sendFile(path.join(publicPath, 'login.html'));
+});
+
+router.get('/profile', (req, res) => {
+    res.sendFile(path.join(publicPath, 'profile.html'));
+});
+
+export default router;

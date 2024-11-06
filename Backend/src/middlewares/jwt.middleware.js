@@ -14,10 +14,10 @@ export const verifyToken = (req, res, next) =>{
 
     //En esta parte se verifica que el token sea válido
     try {
-        //Nos devuelve el payload del email
-        const {email} = jwt.verify(token, process.env.JWT_SECRET)
+        //Nos devuelve el payload del usuario
+        const {username} = jwt.verify(token, process.env.JWT_SECRET)
 
-        req.email = email
+        req.username = username
         next()
     } catch (error) {
         console.log(error)
