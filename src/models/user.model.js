@@ -1,25 +1,25 @@
 import { db } from '../database/connection.js'
 
-const create = async({ email, password, username })=>{
+const create = async({ username, password})=>{
     const query = {
         text: `
-        INSERT INTO users (email, password, username)
-        VALUES($1, $2, $3)
-        RETURNING email ,username, uid
+        INSERT INTO users (username, password)
+        VALUES($1, $2)
+        RETURNING username, uid
         `,
-        values: [email, password, username]
+        values: [username, password]
     }
     const {rows} = await db.query(query)
     return rows[0]
 }
 
-const findOneByEmail = async (email)=>{
+const findForUsername = async (username)=>{
     const query = {
         text: `
         SELECT * FROM users
-        WHERE EMAIL = $1
+        WHERE USERNAME = $1
         `,
-        values : [email]
+        values : [username]
     }
     const {rows} = await db.query(query)
     return rows[0]
@@ -28,5 +28,5 @@ const findOneByEmail = async (email)=>{
 
 export const userModel = {
     create,
-    findOneByEmail
+    findForUsername
 }
